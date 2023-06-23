@@ -5,6 +5,8 @@ The data can then be used to train downstream deep learning models.
 
 The data follows the Cell Painting protocol, a common effort between multiple labs that contains more than 116k tested compound for a equivalent of more that 3M images.
 
+This repository was created once the code was cleaned, the entire Git history is still available.
+
 ## Citation
 
 We used the JUMP Cell Painting datasets (Chandrasekaran et al., 2023), available from the Cell Painting Gallery on the Registry of Open Data on AWS (https://registry.opendata.aws/cellpainting-gallery/).
