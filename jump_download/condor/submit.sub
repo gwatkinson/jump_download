@@ -1,0 +1,32 @@
+# 1 - Describes the working directory of the job.
+InitialDir              = /workspaces/biocomp/watkinso/mice/
+request_cpus            = 8
+request_memory          = 2GB
+MY.MaxThreads           = 64
+accounting_group        = LongJob.Weekly
+MY.Limit                = (10000 / $(MY.MaxThreads)) * $(request_cpus)
+concurrency_limits_expr = StrCat(MY.Owner,"_limit:", $(MY.Limit))
+
+
+# 2 - Describes the program and arguments to be instantiated.
+executable              = /workspaces/biocomp/watkinso/jump_download/jump_download/condor/download_plate.sh
+arguments               = $(job_csv_file) $(request_cpus)
+
+
+# 3 - Describes the output files of the job.
+output                  = /workspaces/biocomp/watkinso/jump_download/log_condor/submission/$(Cluster)-$(Process).output
+error                   = /workspaces/biocomp/watkinso/jump_download/log_condor/submission/$(Cluster)-$(Process).error
+log                     = /workspaces/biocomp/watkinso/jump_download/log_condor/submission/$(Cluster)-$(Process).log
+stream_output           = True
+stream_error            = True
+
+notify_user             = watkinso@bio.ens.psl.eu
+notification            = Complete
+
+
+# 4 - Remove the bad nodes from the list of machines to run on
+Requirements = (Machine != "bioclust08.bioclust.biologie.ens.fr")
+
+
+# 5 - Insert this job into the queue!
+queue job_csv_file from /projects/cpjump1/jump/jobs/submissions_left.csv
