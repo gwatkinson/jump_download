@@ -1,0 +1,14 @@
+# Image processing values
+percentile: 1.0
+min_x: 768
+min_y: 768
+
+# === Should not need to change anything below this line ===
+channels:
+    - DNA  # The order is important
+    - AGP
+    - ER
+    - Mito
+    - RNA
+
+bucket_name: cellpainting-gallery

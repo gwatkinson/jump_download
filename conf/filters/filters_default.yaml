@@ -1,0 +1,100 @@
+# Plate type filter
+plate_types_to_keep:
+    - COMPOUND
+    - ORF
+    - CRISPR
+    - TARGET1
+    - TARGET2
+
+# Source filter
+sources_to_exclude:
+    - source_7
+
+# For compound plates
+compound_number_of_poscon_to_keep_per_well: 4
+compound_number_of_negcon_to_keep_per_well: 3
+compound_number_of_trt_to_keep_per_well: 6
+
+# For ORF plates
+orf_number_of_poscon_to_keep_per_well: 4
+orf_number_of_negcon_to_keep_per_well: 3
+orf_number_of_trt_to_keep_per_well: 6
+
+# For CRISPR plates
+crispr_number_of_poscon_to_keep_per_well: 4
+crispr_number_of_negcon_to_keep_per_well: 3
+crispr_number_of_trt_to_keep_per_well: 6
+
+# For TARGET plates
+target_number_of_poscon_to_keep_per_well: 4
+target_number_of_negcon_to_keep_per_well: 3
+target_number_of_trt_to_keep_per_well: 6
+
+
+# === Should not need to change anything below this line ===
+
+# Compound perturbation controls
+compound_negative_controls:
+    - JCP2022_033924  # DMSO compound
+
+compound_positive_controls:
+    - JCP2022_037716
+    - JCP2022_064022
+    - JCP2022_025848
+    - JCP2022_050797
+    - JCP2022_046054
+    - JCP2022_012818
+    - JCP2022_085227
+    - JCP2022_035095
+    - JCP2022_033954
+
+compound_pert_to_drop: []
+
+
+# ORF perturbation controls
+orf_negative_controls:
+    - JCP2022_915129  # HcRed (col Metadata_Symbol_x)
+    - JCP2022_915128  # BFP
+    - JCP2022_915131  # LacZ
+    - JCP2022_915130  # LUCIFERASE
+
+orf_positive_controls:
+    - JCP2022_915132  # eGFP
+    - JCP2022_037716  # Rest are positive compound controls
+    - JCP2022_035095
+    - JCP2022_050797
+    - JCP2022_012818
+
+orf_pert_to_drop:
+    - JCP2022_999999  # Defect or empty wells
+    - JCP2022_900001  # Defect or empty wells
+
+
+# CRISPR perturbation controls
+crispr_negative_controls:
+    - JCP2022_033924  # DMSO compound
+    - JCP2022_800001  # no-guide
+    - JCP2022_800002  # non-targeting
+
+crispr_positive_controls:
+    - JCP2022_805264  # PLK1 (col Metadata_Symbol_y)
+    - JCP2022_085227  # Rest are the 8 positive control compounds
+    - JCP2022_037716
+    - JCP2022_064022
+    - JCP2022_025848
+    - JCP2022_050797
+    - JCP2022_046054
+    - JCP2022_012818
+    - JCP2022_035095
+    - JCP2022_033954
+
+crispr_pert_to_drop: []
+
+
+# TARGET perturbation controls
+target_negative_controls:
+    - JCP2022_033924  # DMSO compound
+
+target_positive_controls: []
+
+target_pert_to_drop: []

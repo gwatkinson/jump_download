@@ -1,0 +1,22 @@
+# Keep default filter settings
+defaults:
+    - filters_default
+
+# Plate type filter
+plate_types_to_keep:
+    - COMPOUND
+
+# Source filter
+sources_to_exclude:
+    - source_1
+    - source_2
+    - source_4
+    - source_7
+    - source_8
+    - source_9
+    - source_13
+
+# For compound plates
+compound_number_of_poscon_to_keep_per_well: 1
+compound_number_of_negcon_to_keep_per_well: 1
+compound_number_of_trt_to_keep_per_well: 2

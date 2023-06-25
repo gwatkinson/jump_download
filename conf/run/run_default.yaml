@@ -1,0 +1,4 @@
+# Options used in CLI
+job_csv_path: ??? # This should be provided by the user in the CLI
+max_workers: 8 # The maximum number of workers to use for multiprocessing
+force: False

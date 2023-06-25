@@ -1,0 +1,30 @@
+# Get default values from jump_download/conf/output_dirs/default.yaml
+defaults:
+    - output_dirs_default
+
+
+# Path to directories used by the jump_download package
+metadata_dir: ./data/metadata
+metadata_download_script: /mnt/2547d4d7-6732-4154-b0e1-17b0c1e0c565/Document-2/Projet2/Stage/workspace/jump_download/jump_download/metadata/download_jump_metadata.sh
+load_data_dir: ./data/load_data
+job_output_dir: ./data/jobs
+
+# Image output dirs
+source_to_disk:
+    source_13: ./data/images
+    source_4: ./data/images
+    source_1: ./data/images
+    source_9: ./data/images
+    source_3: ./data/images
+    source_5: ./data/images
+    source_8: ./data/images
+    source_11: ./data/images
+    source_2: ./data/images
+    source_10: ./data/images
+    source_6: ./data/images
+    source_7: dropped
+
+# Only useful with scenarios
+scenarios_dir: ./data/scenarios
+tmp_image_dir: ./data/tmp_images
+
