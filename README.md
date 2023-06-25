@@ -27,7 +27,10 @@ cd jump_download
 Use [Poetry](https://python-poetry.org/docs/#installation) to install the Python dependencies (via pip). This command creates an environment in a default location (in `~/.cache/pypoetry/virtualenvs/`). You can create and activate an environment, poetry will then install the dependencies in that environment:
 
 ```bash
-poetry install --without dev
+poetry install --without dev            # Install the dependencies
+
+POETRY_ENV=$(poetry env info --path)    # Get the path of the environment
+source "$POETRY_ENV/bin/activate"       # Activate the environment
 ```
 
 ## Setup the metadata
