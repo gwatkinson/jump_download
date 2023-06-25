@@ -383,32 +383,32 @@ def download_images_from_dataframe(
     try:
         job_df = pd.read_csv(job_csv_path, usecols=cols_to_keep)
         job_df = apply_dtypes_with_large_dict(job_df, job_dtypes)
-    except (UnicodeDecodeError, IsADirectoryError):
+
+        job_id = job_df["job_id"].unique()[0]
+        out_df_path = os.path.join(load_data_out_dir, "final", f"{job_id}.parquet")
+
+        assert len(job_df["job_id"].unique()) == 1, f"Multiple job IDs in csv {job_csv_path}"
+        assert (
+            job_id.split("__")[-1] != "dropped"
+        ), f"Job ID {job_id} says it should be dropped {job_csv_path}"
+
+    except Exception:
         print(f"=== {job_csv_path} could not be loaded as CSV, trying parquet ===")
         job_df = pd.read_parquet(job_csv_path, columns=cols_to_keep)
         job_df = apply_dtypes_with_large_dict(job_df, job_dtypes)
-    except Exception as e:
-        print(f"=== {job_csv_path} could not be loaded ===")
-        raise e
+        out_df_path = os.path.join(load_data_out_dir, "final", "total.parquet")
 
-    output_dir = job_df["output_dir"].unique()[0]
-    job_id = job_df["job_id"].unique()[0]
     filter = job_df["filter"].unique()[0]
-    out_df_path = os.path.join(load_data_out_dir, "final", f"{job_id}.parquet")
-
-    assert (
-        len(job_df["output_dir"].unique()) == 1
-    ), f"Multiple output directories in csv {job_csv_path}"
-    assert len(job_df["job_id"].unique()) == 1, f"Multiple job IDs in csv {job_csv_path}"
+    output_dir = job_df["output_dir"].unique()[0]
+    assert filter, f"All images are dropped in this csv {job_csv_path}"
     assert (
         len(job_df["filter"].unique()) == 1
     ), f"Some images to drop and some to keep in csv {job_csv_path}"
-    assert filter, f"All images are dropped in this csv {job_csv_path}"
     assert (
-        job_id.split("__")[-1] != "dropped"
-    ), f"Job ID {job_id} says it should be dropped {job_csv_path}"
+        len(job_df["output_dir"].unique()) == 1
+    ), f"Multiple output directories in csv {job_csv_path}"
 
-    print(f"\n=== Downloading images for {job_id} into {output_dir} ===\n")
+    print(f"\n=== Downloading images into {output_dir} ===\n")
     download_class = Robust8BitCropPNGScenario(
         load_data_df=job_df,
         out_dir=output_dir,
@@ -427,8 +427,9 @@ def download_images_from_dataframe(
     print(f"\n=== Resulting metadata file in {out_df_path} ===\n")
 
 
-@hydra.main(config_path="../conf", config_name="config")
+@hydra.main(config_path="../../conf", config_name="config", version_base=None)
 def main(cfg: DictConfig):
+    """Test docstring"""
     download_images_from_dataframe(
         job_csv_path=cfg.run.job_csv_path,
         load_data_out_dir=cfg.output_dirs.load_data_dir,

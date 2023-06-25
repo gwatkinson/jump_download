@@ -10,7 +10,10 @@ plate_types_to_keep:
 sources_to_exclude:
     - source_1
     - source_2
+    - source_3
     - source_4
+    - source_5
+    - source_6
     - source_7
     - source_8
     - source_9
