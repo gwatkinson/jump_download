@@ -324,7 +324,7 @@ def create_submission_csv(job_output_dir):
     submission_df.to_csv(submission_df_path, index=False, header=False)
 
 
-@hydra.main(config_path="config", config_name="config")
+@hydra.main(config_path="../../conf", config_name="config", version_base=None)
 def sample_load_data(cfg: DictConfig):
     load_data_dir = cfg.output_dir.load_data_dir
     job_output_dir = cfg.output_dir.job_output_dir

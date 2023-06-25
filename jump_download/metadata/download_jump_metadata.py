@@ -56,7 +56,7 @@ def get_metadata_df(
     return metadata_df
 
 
-@hydra.main(config_path="conf", config_name="config")
+@hydra.main(config_path="../../conf", config_name="config", version_base=None)
 def main(cfg: DictConfig):
     """Download the JUMP metadata files."""
     metadata_script = cfg.output_dirs.metadata_download_script

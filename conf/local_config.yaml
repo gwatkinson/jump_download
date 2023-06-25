@@ -2,3 +2,4 @@ defaults:
   - output_dirs: local_dirs
   - filters: local_filters
   - processing: processing_default
+  - run: run_default

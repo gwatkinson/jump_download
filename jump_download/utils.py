@@ -38,7 +38,7 @@ def simple_convert_to_8bit(img):
 
 
 def get_subdictionary(dictionary, keys):
-    return {key: dictionary[key] for key in keys}
+    return {key: dictionary[key] for key in keys if key in dictionary}
 
 
 def apply_dtypes_with_large_dict(df: pd.DataFrame, dtypes: dict):

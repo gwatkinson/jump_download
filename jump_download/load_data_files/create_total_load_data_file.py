@@ -39,25 +39,6 @@ class DownloadLoadData(BaseDownload):
         self.total_image_file = os.path.join(load_data_dir, "total_load_data.csv.gz")
         self.total_illum_file = os.path.join(load_data_dir, "total_illum.csv.gz")
 
-    def execute_job(self, job):
-        """Execute a single load data job that consists of downloading a load data file from S3 and saving it to disk."""
-        if job["skip"]:
-            return "Skipped"
-
-        source = job["source"]
-        batch = job["batch"]
-        plate = job["plate"]
-        output = job["out_dir"]
-
-        load_data_df = pd.read_parquet(
-            self.query_format.format(source=source, batch=batch, plate=plate),
-            storage_options={"anon": True},
-        )
-
-        load_data_df.to_csv(output, index=False)
-
-        return "Success"
-
     def get_job_list(self):
         """Create a list of jobs to download load data files from S3, one for each plate in the JUMP dataset."""
         out_dir = self.tmp_load_data_dir
@@ -85,6 +66,25 @@ class DownloadLoadData(BaseDownload):
         print(f"Skipping {sum([job['skip'] for job in jobs])}/{len(jobs)} jobs")
 
         return jobs
+
+    def execute_job(self, job):
+        """Execute a single load data job that consists of downloading a load data file from S3 and saving it to disk."""
+        if job["skip"]:
+            return "Skipped"
+
+        source = job["source"]
+        batch = job["batch"]
+        plate = job["plate"]
+        output = job["out_dir"]
+
+        load_data_df = pd.read_parquet(
+            self.query_format.format(source=source, batch=batch, plate=plate),
+            storage_options={"anon": True},
+        )
+
+        load_data_df.to_csv(output, index=False)
+
+        return "Success"
 
     def post_process(self, download_results) -> None:
         # Check that all jobs were successful
@@ -170,7 +170,7 @@ class DownloadLoadData(BaseDownload):
                 print(
                     f"Total illum file in {self.total_illum_file} ({os.path.getsize(self.total_illum_file) / 1e6:.2f} MB)"
                 )
-            return
+                return
 
         # Create a list of jobs to download load data files from S3
         print("\n=== Creating load data jobs...")
@@ -263,7 +263,7 @@ def get_load_data_with_metadata(
     return images_with_metadata
 
 
-@hydra.main(config_path="conf", config_name="config")
+@hydra.main(config_path="../../conf", config_name="config", version_base=None)
 def main(cfg: DictConfig):
     """Create total load data file for all plates in the JUMP dataset."""
     metadata_dir = cfg.output_dirs.metadata_dir
@@ -280,7 +280,7 @@ def main(cfg: DictConfig):
         load_data_dir=load_data_dir,
         tmp_load_data_dir=tmp_load_data_dir,
         remove_tmp=True,
-        channels=cfg.run.channels,
+        channels=cfg.processing.channels,
         max_workers=cfg.run.max_workers,
         force=cfg.run.force,
     )

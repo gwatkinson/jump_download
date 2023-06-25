@@ -29,6 +29,7 @@ recreate_submission_file = "jump_download.create_jobs.recreate_submission:main"
 [tool.poetry.dependencies]
 # Base python
 python = "^3.8.1"
+tqdm = "^4.65.0"
 omegaconf = "^2.3.0"
 hydra-core = "^1.3.2"
 
@@ -44,6 +45,7 @@ pillow = "^9.5.0"
 imagecodecs = "^2023.3.16"
 tifffile = "^2023.4.12"
 pylibtiff = "^0.5.1"
+scikit-image = "^0.21.0"
 
 # AWS dependencies
 boto3 = "^1.26"

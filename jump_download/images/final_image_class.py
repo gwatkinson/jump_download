@@ -427,7 +427,7 @@ def download_images_from_dataframe(
     print(f"\n=== Resulting metadata file in {out_df_path} ===\n")
 
 
-@hydra.main(config_path="conf", config_name="config")
+@hydra.main(config_path="../conf", config_name="config")
 def main(cfg: DictConfig):
     download_images_from_dataframe(
         job_csv_path=cfg.run.job_csv_path,
