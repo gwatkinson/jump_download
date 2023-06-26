@@ -18,7 +18,3 @@ source_to_disk:                                 # Total approx: 7.39 TB
     source_10: /projects/cpjump3/jump/images    # 6 views plates
     source_6: /projects/cpjump3/jump/images     # Large source, cpjump3 approx 2.37 TB
     source_7: dropped  # Dropped
-
-# Only useful with scenarios
-scenarios_dir: /projects/cpjump1/jump/scenarios
-tmp_image_dir: /projects/cpjump1/jump/tmp_images
