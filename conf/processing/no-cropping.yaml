@@ -1,7 +1,0 @@
-# Keep the default processing settings
-defaults:
-    - processing_default
-
-# Overrides the default processing settings
-min_x: 0          # 0 for no cropping
-min_y: 0

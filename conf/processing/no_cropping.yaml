@@ -1,0 +1,8 @@
+# Get default settings from the base config and change only some options
+defaults:
+    - processing_default
+
+# Use 0 in min_resolution_x and min_resolution_y to disable cropping
+download_class:
+    min_resolution_x: 0
+    min_resolution_y: 0
