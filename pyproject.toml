@@ -19,7 +19,7 @@ build-backend = "poetry.core.masonry.api"
 download_metadata = "jump_download.metadata.download_jump_metadata:main"
 download_load_data_files = "jump_download.load_data_files.create_total_load_data_file:main"
 create_job_split = "jump_download.create_jobs.sample_load_data:sample_load_data"
-download_images_from_csv = "jump_download.images.final_image_class:main"
+download_images_from_job = "jump_download.images.final_image_class:main"
 recreate_submission_file = "jump_download.create_jobs.recreate_submission:main"
 
 
