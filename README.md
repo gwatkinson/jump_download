@@ -60,6 +60,7 @@ defaults:
 
 To change the default, you can either change the `conf/config.yaml` file so that it points to newly defined groups, change the default config of each group directly, or create a new root config and pass it to the commands with the `-cn` (or `--config-name`) argument.
 
+See the [local config](https://github.com/gwatkinson/jump_download/blob/main/conf/local_config.yaml) for an example of a secondary config.
 
 ## Setup the metadata
 
@@ -179,23 +180,23 @@ The BaseDownload class is the abstract class that define a framework to download
 
 ```mermaid
 flowchart TD
-subgraph "`**BaseDownload Class**`"
+subgraph "BaseDownload Class"
     direction LR
 
 
-    subgraph "`**download**`"
+    subgraph "download"
         direction LR
-        a["`**get_job_list**
+        a["get_job_list**
         #8594; list[dict]`"]
 
-        c["`**post_process**
+        c["post_process**
         list[dict] #8594; pd.DataFrame`"]
 
-        subgraph b["`**download_objects_from_jobs**`"]
+        subgraph b["download_objects_from_jobs"]
             direction TB
-            ba["`**multiprocess_generator**
+            ba["multiprocess_generator**
             list[dict] #8594; list[dict]`"]
-            bb["`**execute_job**
+            bb["execute_job**
             dict #8594; str`"]
             bb ~~~ ba
         end
@@ -203,7 +204,7 @@ subgraph "`**BaseDownload Class**`"
         a --> b --> c
     end
 
-    d("`**download_timed**
+    d("download_timed**
     @time_decorator(download)
     `")
 
@@ -220,12 +221,12 @@ It has the following structure:
 
 ```mermaid
 flowchart TD
-subgraph "`**GetRawImages Class**`"
+subgraph "GetRawImages Class"
     direction TB
 
-    subgraph init["`**#95;#95;init#95;#95;**`"]
+    subgraph init["#95;#95;init#95;#95;"]
         direction TB
-        a(["`**global** s3_client`"])
+        a(["global** s3_client`"])
         b(["load_data_df"])
         f(["max_workers"])
         e(["force"])
@@ -233,10 +234,10 @@ subgraph "`**GetRawImages Class**`"
         d(["bucket_name"])
     end
 
-    get_job_list["`**get_job_list**
+    get_job_list["get_job_list**
     load_data_df#8594;list#91;dict#91;dict#93;#93;`"]
 
-    execute_job["`**execute_job**
+    execute_job["execute_job**
     dict#91;dict#93;#8594;str`"]
 
     init ~~~ get_job_list & execute_job
@@ -263,12 +264,12 @@ Finally, the `Robust8BitCropPNG` class is a child class of the `GetRawImages` cl
 
 ```mermaid
 flowchart TD
-subgraph "`**Robust8BitCropPNGScenario Class**`"
+subgraph "Robust8BitCropPNGScenario Class"
     direction TB
 
-    subgraph init["`**#95;#95;init#95;#95;**`"]
+    subgraph init["#95;#95;init#95;#95;"]
         direction TB
-        a{{"`**GetRawImages** class with parameters`"}}
+        a{{"GetRawImages** class with parameters`"}}
         b(["percentile"])
         c([min_resolution_x])
         d([min_resolution_y])
@@ -277,7 +278,7 @@ subgraph "`**Robust8BitCropPNGScenario Class**`"
         g([output_format])
     end
 
-    subgraph get_job_list["`**get_job_list**`"]
+    subgraph get_job_list["get_job_list"]
         direction LR
         aa{{"GetRawImages.get_job_list()"}}
         ab["Add file output paths"]
@@ -286,7 +287,7 @@ subgraph "`**Robust8BitCropPNGScenario Class**`"
     end
 
 
-    subgraph execute_job["`**execute_job**`"]
+    subgraph execute_job["execute_job"]
         direction LR
         ba{{"GetRawImages.execute_job()"}}
 
@@ -302,7 +303,7 @@ subgraph "`**Robust8BitCropPNGScenario Class**`"
     end
 
 
-    subgraph post_process["`**post_process**`"]
+    subgraph post_process["post_process"]
         direction LR
         ca["Check that all images were <br> downloaded successfully"]
         cb["Keep output path <br>and source/plate/well/site"]
