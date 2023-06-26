@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 from botocore import UNSIGNED
 from botocore.config import Config
+from hydra.utils import instantiate
 from omegaconf import DictConfig
 from PIL import Image
 
@@ -329,119 +330,93 @@ class Robust8BitCropPNGScenario(GetRawImages):
         return clean_image
 
 
-def download_images_from_dataframe(
-    job_csv_path,
-    load_data_out_dir,
-    percentile,
-    min_resolution_x,
-    min_resolution_y,
-    max_workers,
-    force,
-    job_dtypes,
-    channels,
-    bucket_name,
-):
+@hydra.main(config_path="../../conf", config_name="config", version_base=None)
+def main(cfg: DictConfig):
     """Download images from the S3 bucket given a scenario and a load data file.
 
     Args:
-        job_csv_path (str): Path to the job.csv.gz file
-        tmp_out_dir (str): Path to the temporary image directory
-        load_data_out_dir (str): Path to the directory containing the temporary images
-        percentile (float): Percentile to use for the scaling function
-        min_resolution_x (int): Minimum resolution in the x direction for the cropping function
-        min_resolution_y (int): Minimum resolution in the y direction for the cropping function
-        max_workers (int): Maximum number of workers to use
-        force (bool): Whether to run the job even if the output file already exists
-        channels (list): Channels to download
-        bucket_name (str): Name of the bucket to download from
+        cfg (DictConfig): Configuration composed by hydra.
     """
-    cols_to_keep = [
-        "Metadata_Source",
-        "Metadata_Batch",
-        "Metadata_Plate",
-        "Metadata_Well",
-        "Metadata_Site",
-        "FileName_OrigDNA",
-        "FileName_OrigAGP",
-        "FileName_OrigER",
-        "FileName_OrigMito",
-        "FileName_OrigRNA",
-        "PathName_OrigDNA",
-        "PathName_OrigAGP",
-        "PathName_OrigER",
-        "PathName_OrigMito",
-        "PathName_OrigRNA",
-        "filter",
-        "output_dir",
-        "job_id",
-    ]
+    job_path = cfg.run.job_path
+    load_data_dir = cfg.output_dirs.load_data_dir
 
-    print(f"\n=== Currently in {os.getcwd()} ===\n")
-    print(f"\n=== Target csv file {job_csv_path} exists: {os.path.exists(job_csv_path)} ===\n")
+    job_dtypes = {
+        "Metadata_Source": object,
+        "Metadata_Batch": object,
+        "Metadata_Plate": object,
+        "Metadata_Well": object,
+        "Metadata_Site": np.int64,
+        "FileName_OrigDNA": object,
+        "FileName_OrigAGP": object,
+        "FileName_OrigER": object,
+        "FileName_OrigMito": object,
+        "FileName_OrigRNA": object,
+        "PathName_OrigDNA": object,
+        "PathName_OrigAGP": object,
+        "PathName_OrigER": object,
+        "PathName_OrigMito": object,
+        "PathName_OrigRNA": object,
+        "filter": bool,
+        "output_dir": object,
+        "job_id": object,
+    }
+    cols_to_keep = list(job_dtypes.keys())
 
-    print(f"\n=== Loading {job_csv_path} ===\n")
+    print(f"\n=== Loading {job_path} ===\n")
     try:
-        job_df = pd.read_csv(job_csv_path, usecols=cols_to_keep)
+        job_df = pd.read_csv(job_path, usecols=cols_to_keep, dtype=job_dtypes)
         job_df = apply_dtypes_with_large_dict(job_df, job_dtypes)
 
         job_id = job_df["job_id"].unique()[0]
-        out_df_path = os.path.join(load_data_out_dir, "final", f"{job_id}.parquet")
+        out_df_path = os.path.join(load_data_dir, "final", f"{job_id}.parquet")
 
-        assert len(job_df["job_id"].unique()) == 1, f"Multiple job IDs in csv {job_csv_path}"
+        assert len(job_df["job_id"].unique()) == 1, f"Multiple job IDs in csv {job_path}"
         assert (
             job_id.split("__")[-1] != "dropped"
-        ), f"Job ID {job_id} says it should be dropped {job_csv_path}"
+        ), f"Job ID {job_id} says it should be dropped {job_path}"
 
     except Exception:
-        print(f"=== {job_csv_path} could not be loaded as CSV, trying parquet ===")
-        job_df = pd.read_parquet(job_csv_path, columns=cols_to_keep)
+        print(f"=== {job_path} could not be loaded as CSV, trying parquet ===")
+        job_df = pd.read_parquet(job_path, columns=cols_to_keep)
         job_df = apply_dtypes_with_large_dict(job_df, job_dtypes)
-        out_df_path = os.path.join(load_data_out_dir, "final", "total.parquet")
+        out_df_path = os.path.join(load_data_dir, "final", "total.parquet")
 
     filter = job_df["filter"].unique()[0]
     output_dir = job_df["output_dir"].unique()[0]
-    assert filter, f"All images are dropped in this csv {job_csv_path}"
+    assert filter, f"All images are dropped in this csv {job_path}"
     assert (
         len(job_df["filter"].unique()) == 1
-    ), f"Some images to drop and some to keep in csv {job_csv_path}"
-    assert (
-        len(job_df["output_dir"].unique()) == 1
-    ), f"Multiple output directories in csv {job_csv_path}"
+    ), f"Some images to drop and some to keep in csv {job_path}"
+    assert len(job_df["output_dir"].unique()) == 1, f"Multiple output directories in csv {job_path}"
 
-    print(f"\n=== Downloading images into {output_dir} ===\n")
-    download_class = Robust8BitCropPNGScenario(
+    print("\n=== Instantiating download class ===\n")
+    # Instantiate the download class from the config, adding the directories
+    # By default, use the Robust8BitCropPNGScenario and the variables defined in the config files
+    print(
+        cfg.processing.download_class,
+        cfg.processing.download_class.channels,
+        f"percentile={cfg.processing.download_class.percentile}",
+        f"crop_size={cfg.processing.download_class.min_resolution_y}",
+        f"out_dir={output_dir}",
+        f"out_df_path={out_df_path}",
+        f"max_workers={cfg.run.max_workers}",
+        f"force={cfg.run.force}",
+        sep="\n",
+    )
+
+    download_class = instantiate(
+        cfg.processing.download_class,
         load_data_df=job_df,
         out_dir=output_dir,
         out_df_path=out_df_path,
-        max_workers=max_workers,
-        force=force,
-        percentile=percentile,
-        min_resolution_x=min_resolution_x,
-        min_resolution_y=min_resolution_y,
-        channels=channels,
-        bucket_name=bucket_name,
+        max_workers=cfg.run.max_workers,
+        force=cfg.run.force,
     )
 
+    print(f"\n=== Downloading images into {output_dir} ===\n")
     download_class.download_timed()
 
     print(f"\n=== Resulting metadata file in {out_df_path} ===\n")
-
-
-@hydra.main(config_path="../../conf", config_name="config", version_base=None)
-def main(cfg: DictConfig):
-    """Test docstring"""
-    download_images_from_dataframe(
-        job_csv_path=cfg.run.job_csv_path,
-        load_data_out_dir=cfg.output_dirs.load_data_dir,
-        percentile=cfg.processing.percentile,
-        min_resolution_x=cfg.processing.min_x,
-        min_resolution_y=cfg.processing.min_y,
-        max_workers=cfg.run.max_workers,
-        force=cfg.run.force,
-        job_dtypes=cfg.output_dirs.col_dtypes,
-        channels=cfg.processing.channels,
-        bucket_name=cfg.processing.bucket_name,
-    )
 
 
 if __name__ == "__main__":
