@@ -1,4 +1,9 @@
 # Options used in CLI
-job_path: ??? # This should be provided by the user in the CLI, ??? is the correct way to do this, don't change it
+job_path: ???
+# This should be provided by the user in the CLI
+# ??? is the correct way to do this with hydra
+# You could also use a default path here that points to the job_dir. This will run all the jobs in the job_dir
+# job_path: ${output_dirs.job_output_dir}/ids/
+
 max_workers: 8 # The maximum number of workers to use for multiprocessing
 force: False

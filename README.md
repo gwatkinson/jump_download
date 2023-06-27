@@ -33,7 +33,7 @@ POETRY_ENV=$(poetry env info --path)    # Get the path of the environment
 source "$POETRY_ENV/bin/activate"       # Activate the environment
 ```
 
-## Configuration files
+## Configuration
 
 This project uses [hydra](https://hydra.cc/docs/intro/) to manage the configuration files. The configuration files are located in the [`conf`](https://github.com/gwatkinson/jump_download/conf) folder.
 
@@ -61,6 +61,40 @@ defaults:
 To change the default, you can either change the `conf/config.yaml` file so that it points to newly defined groups, change the default config of each group directly, or create a new root config and pass it to the commands with the `-cn` (or `--config-name`) argument.
 
 See the [local config](https://github.com/gwatkinson/jump_download/blob/main/conf/local_config.yaml) for an example of a secondary config.
+
+## Example script to download the data
+
+The `download_example_script.sh` script is an example of the commands needed to download the data. You probably should not use it as is, but rather copy the commands you need from it or create your own script.
+
+```bash
+# This script runs the commands in sequence to download the metadata and data files
+
+CONF_NAME=$1
+JOB_PATH=$2
+
+echo "Downloading metadata and data files using the configuration file: $CONF_NAME"
+
+echo "Creating Poetry environment"
+poetry install --without dev            # Install the dependencies
+POETRY_ENV=$(poetry env info --path)    # Get the path of the environment
+source "$POETRY_ENV/bin/activate"       # Activate the environment
+
+echo "Downloading metadata files"
+download_metadata -cn $CONF_NAME
+
+echo "Downloading load data files"
+download_load_data_files -cn $CONF_NAME
+
+echo "Filtering and sampling images to download"
+create_job_split -cn $CONF_NAME
+
+echo "Downloading images using job in $JOB_PATH"
+download_images_from_job -cn $CONF_NAME run.job_path=$JOB_PATH
+
+# Or use the sub file
+# condor_submit ./jump_download/condor/submit.sub
+
+```
 
 ## Setup the metadata
 
@@ -344,4 +378,38 @@ This requires some of the previous steps, namely:
 download_metadata
 download_load_data_files
 create_job_split
+```
+
+This step can be ignored if you are not using HTCondor.
+However, if you use it, change the content of the `submit.sub` file to match your needs.
+
+```python
+# 1 - Describes the working directory of the job.
+InitialDir              = <path/to/project>
+request_cpus            = 8
+request_memory          = 2GB
+MY.MaxThreads           = 64
+accounting_group        = LongJob.Weekly
+MY.Limit                = (10000 / $(MY.MaxThreads)) * $(request_cpus)
+concurrency_limits_expr = StrCat(MY.Owner,"_limit:", $(MY.Limit))
+
+
+# 2 - Describes the program and arguments to be instantiated.
+executable              = <path/to/project>/jump_download/condor/download_plate.sh
+arguments               = $(job_csv_file) $(request_cpus)
+
+
+# 3 - Describes the output files of the job.
+output                  = <path/to/log/folder>/$(Cluster)-$(Process).output
+error                   = <path/to/log/folder>/$(Cluster)-$(Process).error
+log                     = <path/to/log/folder>/$(Cluster)-$(Process).log
+stream_output           = True
+stream_error            = True
+
+notify_user             = <email>
+notification            = Complete
+
+
+#  - Insert this job into the queue!
+queue job_csv_file from <path/to>/jobs/submission.csv
 ```
