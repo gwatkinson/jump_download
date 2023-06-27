@@ -9,7 +9,7 @@ This repository was created once the code was cleaned, the entire Git history is
 
 ## Citation
 
-We used the JUMP Cell Painting datasets (Chandrasekaran et al., 2023), available from the Cell Painting Gallery on the Registry of Open Data on AWS (https://registry.opendata.aws/cellpainting-gallery/).
+We used the JUMP Cell Painting datasets (Chandrasekaran et al., 2023), available from the Cell Painting Gallery on the Registry of Open Data on AWS [https://registry.opendata.aws/cellpainting-gallery/](https://registry.opendata.aws/cellpainting-gallery/).
 
 > Chandrasekaran, S. N., Ackerman, J., Alix, E., Ando, D. M., Arevalo, J., Bennion, M., ... & Carpenter, A. E. (2023).
 > JUMP Cell Painting dataset: morphological impact of 136,000 chemical and genetic perturbations. bioRxiv, 2023-03: 2023-03.
@@ -201,12 +201,10 @@ download_class:
 This script uses the [`Robust8BitCropPNGScenario`](https://github.com/gwatkinson/jump_download/blob/main/jump_download/images/final_image_class.py#128).
 It can be modified to use different parameters, or to use a different scenario.
 
-
 ### Details on the download class
 
 The main class used to download and apply the processing to the images is the `Robust8BitCropPNGScenario` class.
 It inherits from the `BaseDownload` class, which is a class that defines a framework to run a function on a list of jobs. The code is in the `jump_download/base_class.py` file.
-
 
 #### BaseDownload Class
 
