@@ -218,27 +218,27 @@ subgraph "BaseDownload Class"
 
     subgraph "download"
         direction LR
-        a["get_job_list**
-        #8594; list[dict]`"]
+        a["get_job_list
+        #8594; list[dict]"]
 
-        c["post_process**
-        list[dict] #8594; pd.DataFrame`"]
+        c["post_process
+        list[dict] #8594; pd.DataFrame"]
 
         subgraph b["download_objects_from_jobs"]
             direction TB
-            ba["multiprocess_generator**
-            list[dict] #8594; list[dict]`"]
-            bb["execute_job**
-            dict #8594; str`"]
+            ba["multiprocess_generator
+            list[dict] #8594; list[dict]"]
+            bb["execute_job
+            dict #8594; str"]
             bb ~~~ ba
         end
 
         a --> b --> c
     end
 
-    d("download_timed**
+    d("download_timed
     @time_decorator(download)
-    `")
+    ")
 
 end
 ```
@@ -258,7 +258,7 @@ subgraph "GetRawImages Class"
 
     subgraph init["#95;#95;init#95;#95;"]
         direction TB
-        a(["global** s3_client`"])
+        a(["global s3_client"])
         b(["load_data_df"])
         f(["max_workers"])
         e(["force"])
@@ -266,11 +266,11 @@ subgraph "GetRawImages Class"
         d(["bucket_name"])
     end
 
-    get_job_list["get_job_list**
-    load_data_df#8594;list#91;dict#91;dict#93;#93;`"]
+    get_job_list["get_job_list
+    load_data_df#8594;list#91;dict#91;dict#93;#93;"]
 
-    execute_job["execute_job**
-    dict#91;dict#93;#8594;str`"]
+    execute_job["execute_job
+    dict#91;dict#93;#8594;str"]
 
     init ~~~ get_job_list & execute_job
 end
@@ -301,7 +301,7 @@ subgraph "Robust8BitCropPNGScenario Class"
 
     subgraph init["#95;#95;init#95;#95;"]
         direction TB
-        a{{"GetRawImages** class with parameters`"}}
+        a{{"GetRawImages class with parameters"}}
         b(["percentile"])
         c([min_resolution_x])
         d([min_resolution_y])
@@ -379,7 +379,7 @@ create_job_split
 ```
 
 This step can be ignored if you are not using HTCondor.
-However, if you use it, change the content of the `submit.sub` file to match your needs.
+However, if you use it, **change the content of the `submit.sub`** file to match your needs.
 
 ```python
 # 1 - Describes the working directory of the job.
@@ -409,5 +409,5 @@ notification            = Complete
 
 
 #  - Insert this job into the queue!
-queue job_csv_file from <path/to>/jobs/submission.csv
+queue job_csv_file from <path/to/load_data_dir>/jobs/submission.csv
 ```
