@@ -1,0 +1,20 @@
+# Path to directories used by the jump_download package
+metadata_dir: ../cpjump1/jump/metadata
+metadata_download_script: /workspaces/biocomp/watkinso/jump_download/jump_download/metadata/download_jump_metadata.sh
+load_data_dir: ../cpjump1/jump/load_data
+job_output_dir: ../cpjump1/jump/jobs
+
+# Image output dirs
+source_to_disk:                                 # Total approx: 7.39 TB
+    source_13: ../cpjump1/jump/images    # CRISPR
+    source_4: ../cpjump1/jump/images     # ORF
+    source_1: ../cpjump1/jump/images     # Large plates
+    source_9: ../cpjump1/jump/images     # cpjump1 approx 2.41 TB
+    source_3: ../cpjump2/jump/images     # "Standard" plates
+    source_5: ../cpjump2/jump/images     # ../cpjump2 approx 2.61 TB
+    source_8: ../cpjump2/jump/images
+    source_11: ../cpjump2/jump/images
+    source_2: ../cpjump3/jump/images     # 6 views plates
+    source_10: ../cpjump3/jump/images    # 6 views plates
+    source_6: ../cpjump3/jump/images     # Large source, cpjump3 approx 2.37 TB
+    source_7: dropped  # Dropped

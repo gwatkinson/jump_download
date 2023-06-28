@@ -36,9 +36,14 @@ mkdir -p $METADATA_DIR
 echo "Cloning metadata repository https://github.com/jump-cellpainting/datasets.git ..."
 git clone https://github.com/jump-cellpainting/datasets.git "$METADATA_DIR/tmp"
 
+echo "Cloning metadata repository https://github.com/jump-cellpainting/JUMP-Target.git ..."
+git clone https://github.com/jump-cellpainting/JUMP-Target.git "$METADATA_DIR/tmp2"
+
 # Keep only the interesting folder.
 echo "Moving metadata folder..."
 mv "$METADATA_DIR/tmp/metadata/"* "$METADATA_DIR"
+mv "$METADATA_DIR/tmp2/"* "$METADATA_DIR"
+
 
 # Decrompress the files.
 echo "Decompressing metadata files..."
@@ -47,7 +52,9 @@ for file in $METADATA_DIR/*.csv.gz; do
 done
 
 # Remove the temporary folder.
-echo "Removing temporary folder..."
+echo "Removing temporary folders..."
 rm -rf "$METADATA_DIR/tmp"
+rm -rf "$METADATA_DIR/tmp2"
+rm -f "$METADATA_DIR/LICENCE"
 
 echo "Metadata retrieval complete."

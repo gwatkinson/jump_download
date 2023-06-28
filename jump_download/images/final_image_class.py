@@ -299,13 +299,28 @@ class Robust8BitCropPNGScenario(GetRawImages):
             to_display = image_df[~image_df["result"].isin(["Success", "Skipped"])].drop(
                 columns="Metadata_Batch"
             )
+            num_errors = to_display.shape[0]
             unique_errors = to_display["result"].unique().tolist()
-            raise Exception(
-                "Not all images were downloaded successfully:\n"
-                f"\n{to_display.shape[0]} errors encountered\n"
-                f"\n Error messages {unique_errors}\n"
-                f"\n{to_display.head(10).to_string(index=False)}"
-            )
+
+            acceptable_errors = [
+                "Failed: cannot identify image file",
+                "Failed: An error occurred (404) when calling the HeadObject operation: Not Found",
+            ]
+            delete = [
+                any(accepted in error for accepted in acceptable_errors) for error in unique_errors
+            ]
+
+            if num_errors < 50 and delete:
+                print("Less than 50 Error 404s encountered, but these can happend")
+                print("Removing these from the error list")
+                image_df = image_df[image_df["result"].isin(["Success", "Skipped"])]
+            else:
+                raise Exception(
+                    "Not all images were downloaded successfully:\n"
+                    f"\n{num_errors} errors encountered\n"
+                    f"\n Error messages {unique_errors}\n"
+                    f"\n{to_display.head(10).to_string(index=False)}"
+                )
 
         pivot_image_df = image_df.pivot(
             index=[
