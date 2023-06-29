@@ -5,9 +5,9 @@ The data can then be used to train downstream deep learning models.
 
 The data follows the Cell Painting protocol, a common effort between multiple labs that contains more than 116k tested compound for a equivalent of more that 3M images.
 
-This repository was created once the code was cleaned, the entire Git history is still available.
+This repository was created once the code was cleaned, the entire Git history is still available on another private repo.
 
-## Citation
+## :blue_book: Citation
 
 We used the JUMP Cell Painting datasets (Chandrasekaran et al., 2023), available from the Cell Painting Gallery on the Registry of Open Data on AWS [https://registry.opendata.aws/cellpainting-gallery/](https://registry.opendata.aws/cellpainting-gallery/).
 
@@ -15,7 +15,7 @@ We used the JUMP Cell Painting datasets (Chandrasekaran et al., 2023), available
 > JUMP Cell Painting dataset: morphological impact of 136,000 chemical and genetic perturbations. bioRxiv, 2023-03: 2023-03.
 > doi:10.1101/2023.03.23.534023
 
-## Installation
+## :hammer_and_wrench: Installation
 
 Clone the code from GitHub:
 
@@ -33,7 +33,7 @@ POETRY_ENV=$(poetry env info --path)    # Get the path of the environment
 source "$POETRY_ENV/bin/activate"       # Activate the environment
 ```
 
-## Configuration
+## :page_facing_up: Configuration
 
 This project uses [hydra](https://hydra.cc/docs/intro/) to manage the configuration files. The configuration files are located in the [`conf`](https://github.com/gwatkinson/jump_download/conf) folder.
 
@@ -62,7 +62,7 @@ To change the default, you can either change the `conf/config.yaml` file so that
 
 See the [local config](https://github.com/gwatkinson/jump_download/blob/main/conf/local_config.yaml) for an example of a secondary config.
 
-## Example script to download the data
+## :arrow_forward: Quickstart
 
 The `download_example_script.sh` script is an example of the commands needed to download the data. You probably should not use it as is, but rather copy the commands you need from it or create your own script.
 
@@ -96,7 +96,9 @@ download_images_from_job -cn $CONF_NAME run.job_path=$JOB_PATH
 
 ```
 
-## Setup the metadata
+## :memo: Usage
+
+### Setup the metadata
 
 First, the metadata for the JUMP cpg0016 dataset can be found on [github.com/jump-cellpainting/datasets](https://github.com/jump-cellpainting/datasets/tree/main/metadata). The script `download_metadata` (defined with poetry) gets the metadata and does some light processing (merge, ...):
 
@@ -111,7 +113,7 @@ metadata_dir
 metadata_download_script
 ```
 
-## Get the "load data" files from S3
+### Get the "load data" files from S3
 
 Then, we need the load data files from the [S3 bucket](https://registry.opendata.aws/cellpainting-gallery/) (see [here](https://cellpainting-gallery.s3.amazonaws.com/index.html#cpg0016-jump/) to explore the bucket).
 
@@ -131,7 +133,7 @@ load_data_dir
 metadata_dir   # Relies on the metadata downloaded in the previous step
 ```
 
-## Create the job files
+### Create the job files
 
 This is the next step, where we create the csv that are used to run the jobs on condor. This step also samples observations given rules set in the config.
 
@@ -178,7 +180,7 @@ The resulting folder structure is:
 The original load_data file is split into many subfiles in order to use them with Condor.
 If you prefer downloading all the images at once, you can just use the `load_data/jobs/ids` parquet directory directly, which can loaded directly with pandas as a single dataframe.
 
-## Download the images
+### Download the images
 
 Finally, the images can be downloaded using the following command:
 
@@ -201,12 +203,12 @@ download_class:
 This script uses the [`Robust8BitCropPNGScenario`](https://github.com/gwatkinson/jump_download/blob/main/jump_download/images/final_image_class.py#128).
 It can be modified to use different parameters, or to use a different scenario.
 
-### Details on the download class
+#### Details on the download class
 
 The main class used to download and apply the processing to the images is the `Robust8BitCropPNGScenario` class.
 It inherits from the `BaseDownload` class, which is a class that defines a framework to run a function on a list of jobs. The code is in the `jump_download/base_class.py` file.
 
-#### BaseDownload Class
+##### BaseDownload Class
 
 The BaseDownload class is the abstract class that define a framework to download the data. The code is in the `download/base_class.py` file, and is used in the `images` and `load_data_files` modules.
 
@@ -245,7 +247,7 @@ end
 
 The `get_job_list`, `execute_job` and `post_process` methods are abstract, and need to be implemented in the child class.
 
-#### GetRawImages Class
+##### GetRawImages Class
 
 From there, the `GetRawImages` class is a child class of the `BaseDownload` class. It is used to download the raw images from the S3 bucket.
 
@@ -290,7 +292,7 @@ It implements the `get_job_list` and `execute_job` methods. The jobs are diction
 
 The `execute_job` method uses the `download_fileobj` from boto3 to add the bytes object to the job dictionaries.
 
-#### Robust8BitCropPNGScenario Class
+##### Robust8BitCropPNGScenario Class
 
 Finally, the `Robust8BitCropPNG` class is a child class of the `GetRawImages` class. It is used to download the raw images from the S3 bucket, and then process them to create the 8-bit PNG images.
 
@@ -360,7 +362,7 @@ You can create your own class by inheriting from the `BaseDownload` class, and i
 If you create your own class, you will also probably need to modify the `main` function in the `jump_download/images/final_image_class.py` module.
 If you recreate it, the required arguments listed above are not mandatory (do as you wish).
 
-## Run the jobs on the cluster with Condor
+### Run the jobs on the cluster with Condor
 
 This is the last step of the pipeline. It uses the `download_plate` command to download the images from the S3 bucket.
 
