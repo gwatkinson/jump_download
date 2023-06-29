@@ -63,18 +63,12 @@ repos:
           # - flake8-docstrings
           # - flake8-requirements
 
-  - repo: https://github.com/frnmst/md-toc
-    rev: 8.1.8  # or a specific git tag from md-toc
-    hooks:
-      - id: md-toc
-        args: [-p, 'github', '-l6']  # CLI options
-
   - repo: https://github.com/jorisroovers/gitlint
     rev: 'v0.18.0'
     hooks:
       - id: gitlint
 
-    
+
   # -   repo: https://github.com/PyCQA/autoflake
   #     rev: v2.1.1
   #     hooks:
