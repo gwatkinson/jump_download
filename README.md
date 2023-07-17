@@ -15,6 +15,97 @@ We used the JUMP Cell Painting datasets (Chandrasekaran et al., 2023), available
 > JUMP Cell Painting dataset: morphological impact of 136,000 chemical and genetic perturbations. bioRxiv, 2023-03: 2023-03.
 > doi:10.1101/2023.03.23.534023
 
+## Resulting file structure
+
+```bash
+jump
+├── images
+│   ├── source_1
+│   │   ├── Batch1_20221004
+│   │   │   ├── UL001641
+│   │   │   │   ├── source_1__UL001641__A02__1__AGP.png
+│   │   │   │   ├── source_1__UL001641__A02__1__DNA.png
+│   │   │   │   ├── source_1__UL001641__A02__1__ER.png
+│   │   │   │   ├── source_1__UL001641__A02__1__Mito.png
+│   │   │   │   ├── source_1__UL001641__A02__1__RNA.png
+│   │   │   │   ├── source_1__UL001641__A02__2__AGP.png
+│   │   │   │   ├── source_1__UL001641__A02__2__DNA.png
+│   │   │   │   ├── source_1__UL001641__A02__2__ER.png
+│   │   │   │   ├── source_1__UL001641__A02__2__Mito.png
+│   │   │   │   ├── source_1__UL001641__A02__2__RNA.png
+│   │   │   │   └── ...
+│   │   │   └── ...
+│   │   └── ...
+│   ├── source_13
+│   ├── source_4
+│   └── source_9
+├── jobs
+│   ├── ids
+│   ├── submission.csv
+│   ├── submissions_left.csv
+│   └── test_submission.csv
+├── load_data
+│   ├── check
+│   ├── final
+│   ├── load_data_with_metadata
+│   ├── load_data_with_samples
+│   ├── total_illum.csv.gz
+│   └── total_load_data.csv.gz
+├── metadata
+│   ├── complete_metadata.csv
+│   ├── compound.csv
+│   ├── compound.csv.gz
+│   ├── crispr.csv
+│   ├── crispr.csv.gz
+│   ├── JUMP-Target-1_compound_metadata.tsv
+│   ├── JUMP-Target-1_compound_platemap.tsv
+│   ├── JUMP-Target-1_crispr_metadata.tsv
+│   ├── JUMP-Target-1_crispr_platemap.tsv
+│   ├── JUMP-Target-1_orf_metadata.tsv
+│   ├── JUMP-Target-1_orf_platemap.tsv
+│   ├── JUMP-Target-2_compound_metadata.tsv
+│   ├── JUMP-Target-2_compound_platemap.tsv
+│   ├── microscope_config.csv
+│   ├── microscope_filter.csv
+│   ├── orf.csv
+│   ├── orf.csv.gz
+│   ├── plate.csv
+│   ├── plate.csv.gz
+│   ├── README.md
+│   ├── resolution.csv
+│   ├── well.csv
+│   └── well.csv.gz
+└── README.md
+```
+
+The most important files and folders are:
+
+* `images`: a folder containing images from the dataset, organized by source, batch and plate
+* `metadata`: a folder containing metadata about the perturbations
+  * `metadata/complete_metadata.csv`: a file containing all the well-level metadata for the dataset. It is the merge of the following dataframes:
+    * `metadata/plate.csv`: a file containing a list of all plates in the dataset
+    * `metadata/well.csv`: a file containing a list of all wells in the dataset, with their corresponding plate and perturbation ID
+    * `metadata/compound.csv`: a file containing a list of all compound perturbations
+    * `metadata/crispr.csv`: a file containing a list of all CRISPR perturbations
+    * `metadata/orf.csv`: a file containing a list of all ORF perturbations
+* `load_data`: a folder containing the path to the images both locally and in the s3 bucket
+  * `load_data/load_data_with_samples`: a parquet dataframe (partitionned by source) containing the path to the images in the s3 bucket, as well as the filter column, indicating whether the image is kept or not in the local dataset
+  * `load_data/final`: a parquet dataframe (partitionned by plate) containing the path to the images locally. It only contains the images that are kept in the local dataset and doesn't include any metadata
+* `jobs`: a folder containing the jobs used with HTCondor
+
+## Notes
+
+I recommend using the `load_data/final` parquet dataframe to get a list of all the images downloaded on disk.
+Then, you can use the `metadata/complete_metadata.csv` file to get the metadata for each image and merge it with the `load_data/final` dataframe, on the source, plate and well columns.
+
+A line of the `load_data/final` dataframe is equivalent to a "site" of a well, there are around 6 sites per well.
+And a site is constituted of 5 images, one for each channel.
+A line therefore corresponds to 5 images, one for each channel, in the columns `FilePath_Orig{DNA,AGP,ER,Mito,RNA}` and the columns `Metadata_{Source,Batch,Plate,Well,Site}` contain the metadata for the site.
+
+The `load_data/load_data_with_samples` can be used if you want to look at the images that were not included in the local dataset.
+
+The `jobs` folder is totally useless after the dataset has been downloaded.
+
 ## :hammer_and_wrench: Installation
 
 Clone the code from GitHub:
