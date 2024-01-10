@@ -96,7 +96,7 @@ def sample_from_load_data(
     total_controls = positive_controls + negative_controls
     plate_type_list = plate_type if isinstance(plate_type, list) else [plate_type]
     first_query = "drop_sample == False"
-    first_query += " & ~{filter_var}.isin({pert_to_drop})" if pert_to_drop else ""
+    first_query += f" & ~{filter_var}.isin({pert_to_drop})" if pert_to_drop else ""
 
     if not positive_controls:
         print("Skipping positive controls")
