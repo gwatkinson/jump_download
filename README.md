@@ -7,6 +7,8 @@ The data follows the Cell Painting protocol, a common effort between multiple la
 
 This repository was created once the code was cleaned, the entire Git history is still available on another private repo.
 
+Slides presenting the scenarios: [Slides](https://docs.google.com/presentation/d/1kGbJCFvzqbEOxjNtt0AJ3xxSIb0BQ7NI5Xlq_jBt7Vg/edit?usp=sharing)
+
 ## :blue_book: Citation
 
 We used the JUMP Cell Painting datasets (Chandrasekaran et al., 2023), available from the Cell Painting Gallery on the Registry of Open Data on AWS [https://registry.opendata.aws/cellpainting-gallery/](https://registry.opendata.aws/cellpainting-gallery/).
