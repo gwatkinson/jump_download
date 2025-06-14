@@ -9,13 +9,50 @@ This repository was created once the code was cleaned, the entire Git history is
 
 Slides presenting the scenarios: [Slides](https://docs.google.com/presentation/d/1kGbJCFvzqbEOxjNtt0AJ3xxSIb0BQ7NI5Xlq_jBt7Vg/edit?usp=sharing)
 
+
+## 🤝 Contributing
+Contributions are welcome! If you have suggestions for improvements, find bugs, or want to add features, feel free to:
+
+- Open an issue
+- Submit a pull request
+
+Whether it's a small typo fix or a major enhancement, your input is appreciated!
+
+If you have any questions or need guidance, don’t hesitate to reach out: gabriel.watkinson@gmail.com
+
+
+
 ## :blue_book: Citation
+
+If you use this repository or find it helpful in your research, please consider citing the following works:
+
+### JUMP Cell Painting Assay
 
 We used the JUMP Cell Painting datasets (Chandrasekaran et al., 2023), available from the Cell Painting Gallery on the Registry of Open Data on AWS [https://registry.opendata.aws/cellpainting-gallery/](https://registry.opendata.aws/cellpainting-gallery/).
 
-> Chandrasekaran, S. N., Ackerman, J., Alix, E., Ando, D. M., Arevalo, J., Bennion, M., ... & Carpenter, A. E. (2023).
-> JUMP Cell Painting dataset: morphological impact of 136,000 chemical and genetic perturbations. bioRxiv, 2023-03: 2023-03.
-> doi:10.1101/2023.03.23.534023
+```bibtex
+@article{chandrasekaran2023jump,
+  title={JUMP Cell Painting dataset: morphological impact of 136,000 chemical and genetic perturbations},
+  author={Chandrasekaran, Srinivas Niranj and Ackerman, Jeanelle and Alix, Eric and Ando, D Michael and Arevalo, John and Bennion, Melissa and Boisseau, Nicolas and Borowa, Adriana and Boyd, Justin D and Brino, Laurent and others},
+  journal={BioRxiv},
+  pages={2023--03},
+  year={2023},
+  publisher={Cold Spring Harbor Laboratory}
+}
+```
+
+### Paper associated with the preprocessing
+
+```bibtex
+@inproceedings{watkinson2024weakly,
+  title={Weakly Supervised Cross-Modal Learning in High-Content Screening},
+  author={Watkinson, Gabriel and Cohen, Ethan and Bourriez, Nicolas and Bendidi, Ihab and Bollot, Guillaume and Genovesio, Auguste},
+  booktitle={2024 IEEE International Symposium on Biomedical Imaging (ISBI)},
+  pages={1--5},
+  year={2024},
+  organization={IEEE}
+}
+```
 
 ## Resulting file structure
 
